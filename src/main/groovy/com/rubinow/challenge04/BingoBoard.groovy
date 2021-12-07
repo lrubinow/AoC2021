@@ -46,13 +46,11 @@ class BingoBoard {
     private Boolean checkForWinner() {
         for( int r : 0 .. board.size() - 1 ) {
             if( board.get(r).stream().mapToInt(Integer::valueOf).sum() >= 1000 * COLS ) {
-                println( "Row $r is a winner ")
                 return true
             }
         }
         for( int c : 0 .. COLS - 1 ) {
             if( board.stream().mapToInt( row -> row.get(c)).sum() >= 1000 * ROWS ) {
-                println( "Col $c is a winner")
                 return true
             }
         }

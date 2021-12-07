@@ -1,5 +1,7 @@
 package com.rubinow.challenge03
 
+import static com.rubinow.utils.ChallengeUtils.iterateLines
+
 // correct output is 3847100
 
 new ChallengeA().go("/ch3/3.data")
@@ -7,9 +9,9 @@ new ChallengeA().go("/ch3/3.data")
 class ChallengeA {
     def go(String data) {
         def  list = new ArrayList<char[]>()
-        getClass().getResource(data).eachLine {
-            list.add(new Bin(it))
-        }
+        iterateLines(data, { line -> {
+            list.add(new Bin(line))
+        }})
 
         def gamma = new Bin(list.get(0).getBinaryDigitCount())
         def epsilon = new Bin(list.get(0).getBinaryDigitCount())

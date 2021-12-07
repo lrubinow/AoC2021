@@ -1,4 +1,5 @@
 package com.rubinow.challenge04
+import static com.rubinow.utils.ChallengeUtils.iterateLines
 
 // correct output is 69579
 
@@ -9,8 +10,7 @@ class ChallengeA {
         List<BingoBoard> boards = new ArrayList<>()
         List<String> callouts
         BingoBoard currentBoard
-        getClass().getResource(data).eachLine (
-                line -> {
+        iterateLines (data, line -> {
                     if( line.contains(",")) {
                         callouts = line.split(",")
                     } else if( line.isBlank()) {
@@ -24,7 +24,6 @@ class ChallengeA {
 
         for( String cString : callouts) {
             Integer c = Integer.parseInt(cString)
-            println( "Calling out $c")
             for( BingoBoard board : boards ) {
                 board.mark(c)
                 if( board.isWinner()) {

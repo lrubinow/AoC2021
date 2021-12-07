@@ -1,4 +1,5 @@
 package com.rubinow.challenge05
+import static com.rubinow.utils.ChallengeUtils.iterateLines
 
 import java.awt.Point
 
@@ -9,8 +10,7 @@ new ChallengeB().go("/ch5/5.data")
 class ChallengeB {
     def go(String data) {
         Map<Point,Integer> seen = new HashMap<>()
-        getClass().getResource(data).eachLine (
-                line -> {
+        iterateLines( data, line -> {
                     Vector v = new Vector(line, true)
                     v.getAllPoints().forEach( point -> {
                         if (!seen.containsKey(point))

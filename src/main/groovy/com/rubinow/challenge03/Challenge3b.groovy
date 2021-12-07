@@ -1,5 +1,5 @@
 package com.rubinow.challenge03
-
+import static com.rubinow.utils.ChallengeUtils.iterateLines
 import java.util.stream.Collectors
 
 // Correct output is 4105235
@@ -9,9 +9,9 @@ new ChallengeB().go("/ch3/3.data")
 class ChallengeB {
     def go(String data) {
         def  list = new ArrayList<char[]>()
-        getClass().getResource(data).eachLine {
-            list.add(new Bin(it))
-        }
+        iterateLines( data, line ->
+            list.add(new Bin(line))
+        )
 
         def oxyList = recurse( list, 0, Common.MOST_COMMON )
         def co2List = recurse( list, 0, Common.LEAST_COMMON )

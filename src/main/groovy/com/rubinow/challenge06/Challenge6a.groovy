@@ -1,4 +1,7 @@
 package com.rubinow.challenge06
+import static com.rubinow.utils.ChallengeUtils.iterateDataAsIntList
+
+
 // correct output for 80 days is 371379
 // correct output for 256 days is 1674303997472
 
@@ -7,13 +10,9 @@ new ChallengeA().go('/ch6/6.data');
 class ChallengeA {
     def go(String data) {
         final int MAX_DAYS = 80
-        Scanner scanner = new Scanner(new File(getClass().getResource(data).toURI())).useDelimiter(',')
 
         Long[] lifespanCounts = new Long[] {0,0,0,0,0,0,0,0,0}
-        while(scanner.hasNextInt()) {
-            Integer initialLifespan = scanner.nextInt()
-            lifespanCounts[initialLifespan]++
-        }
+        iterateDataAsIntList(data, {item -> { lifespanCounts[item as Integer]++} }, ",")
 
         for( Integer day : 0..MAX_DAYS-1) {
             Long spawning = lifespanCounts[0]
@@ -26,7 +25,6 @@ class ChallengeA {
         Long sum = 0
         Arrays.stream(lifespanCounts).forEach(val -> sum += val)
         println( sum)
-
     }
 }
 
