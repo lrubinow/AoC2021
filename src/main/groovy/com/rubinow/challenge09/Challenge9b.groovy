@@ -13,15 +13,15 @@ class ChallengeB {
     def go(data) {
         List<List> map = buildMap(data)
         List<Point> lowPoints = findLowPoints(map)
-        List<Set<Point>> threeLargestBasins = findBasins(map, lowPoints).stream().sorted( (a,b) -> b.size() <=> a.size()).collect(Collectors.toList()).subList(0,3)
+        List<Set<Point>> threeLargestBasins = findBasins(map, lowPoints).stream().sorted((a, b) -> b.size() <=> a.size()).collect(Collectors.toList()).subList(0, 3)
         def product = 1
-        threeLargestBasins.forEach(basin-> product *= basin.size())
+        threeLargestBasins.forEach(basin -> product *= basin.size())
         println product
     }
 
     def buildMap(data) {
         List<List> map = []
-        iterateLines(data, {String line -> {}
+        iterateLines(data, { String line ->
             map.add(line.toCharArray().toList())
         })
         return map
@@ -30,24 +30,21 @@ class ChallengeB {
     def findLowPoints(map) {
         List<Point> retval = []
         map.size().times { y ->
-            map[0].size().times { x -> {
-                if(isLowPoint(map, x, y)) {
-                    retval.add(new Point(x,y))
+            map[0].size().times { x ->
+                if (isLowPoint(map, x, y)) {
+                    retval.add(new Point(x, y))
                 }
-            }}
+            }
         }
         return retval
     }
 
     def isLowPoint(map, x, y) {
         char thisValue = map[y][x]
-        for( def y1 : y-1 ..y+1) {
-            for( def x1 : x-1 .. x+1 ) {
-                // skip diags and identity and out of range
-                if(isInvalidIndex(x, y, x1, y1, map)) {
-                    continue
-                } else {
-                    if( getValueForPoint(map, x1, y1) <= getValueForPoint(map, x, y)) {
+        for (def y1 : y - 1..y + 1) {
+            for (def x1 : x - 1..x + 1) {
+                if (isValidIndex(x, y, x1, y1, map)) {
+                    if (getValueForPoint(map, x1, y1) <= getValueForPoint(map, x, y)) {
                         return false
                     }
                 }
@@ -56,19 +53,19 @@ class ChallengeB {
         return true
     }
 
-    def boolean isInvalidIndex(x, y, x1, y1, map) {
-        return (x1 != x && y1 != y) // diagonal
-                || (x1 == x && y1 == y) // identity
-                || (x1 < 0 || x1 >= map[0].size()) // x out of range
-                || (y1 < 0 || y1 >= map.size()) // y out of range
+    def boolean isValidIndex(x, y, x1, y1, map) {
+        return (x1 == x || y1 == y) // not diagonal
+                && (x1 != x || y1 != y) // not identity
+                && (x1 >= 0 && x1 < map[0].size()) // x in range
+                && (y1 >= 0 && y1 < map.size()) // y in range
     }
 
     def getValueForPoint(map, x, y) {
-        return( map[y][x])
+        return (map[y][x])
     }
 
     def List<Set<Point>> findBasins(List<List> map, List<Point> lowPoints) {
-        lowPoints.stream().map( lowPoint -> findBasin( map, lowPoint)).collect(Collectors.toList())
+        lowPoints.stream().map(lowPoint -> findBasin(map, lowPoint)).collect(Collectors.toList())
     }
 
     Set<Point> findBasin(List<List> map, Point lowPoint) {
@@ -78,20 +75,14 @@ class ChallengeB {
     }
 
     def Set<Point> extendBasin(List<List> map, Point startPoint, HashSet<Point> basin) {
-        for( int y1 : startPoint.y-1 .. startPoint.y+1) {
-            for( int x1 : startPoint.x-1 .. startPoint.x+1 ) {
-                // skip diags and identity
+        for (int y1 : startPoint.y - 1..startPoint.y + 1) {
+            for (int x1 : startPoint.x - 1..startPoint.x + 1) {
                 Point newPoint = new Point(x1, y1)
-                if(isInvalidIndex(startPoint.x, startPoint.y, x1, y1, map)) {
-                    continue
-                } else if ( basin.contains(newPoint)) {
-                    continue
-                } else {
-                    // should this be <=? or <? Apparently <=
-                    if( getIntValueForPoint(map, x1, y1) < 9 ) {
-                        basin.add(newPoint)
-                        extendBasin( map, newPoint, basin)
-                    }
+                if (isValidIndex(startPoint.x, startPoint.y, x1, y1, map)
+                        && !basin.contains(newPoint)
+                        && getIntValueForPoint(map, x1, y1) < 9) {
+                    basin.add(newPoint)
+                    extendBasin(map, newPoint, basin)
                 }
             }
         }
