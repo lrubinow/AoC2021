@@ -13,9 +13,9 @@ class ChallengeB {
     def go(data) {
         List<List> map = buildMap(data)
         List<Point> lowPoints = findLowPoints(map)
-        List<Set<Point>> basins = findBasins(map, lowPoints).stream().sorted( (a,b) -> b.size() <=> a.size()).collect(Collectors.toList()).subList(0,3)
+        List<Set<Point>> threeLargestBasins = findBasins(map, lowPoints).stream().sorted( (a,b) -> b.size() <=> a.size()).collect(Collectors.toList()).subList(0,3)
         def product = 1
-        basins.forEach(basin-> product *= basin.size())
+        threeLargestBasins.forEach(basin-> product *= basin.size())
         println product
     }
 
